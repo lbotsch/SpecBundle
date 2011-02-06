@@ -1,0 +1,81 @@
+<?php
+
+namespace {{Namespace}};
+
+use {{Namespace}}\Base\{{Name}}SpecBase;
+
+/**
+ * {{Name}} Spec
+ * Add your own scenarios or edit the predefined scenarios
+ * that define a simple CRUD interface to the {{Name}} entity.
+ */
+class {{Name}}Spec extends {{Name}}SpecBase
+{
+    /**
+     * @scenario
+     */
+    public function list{{Name}}s() {
+        $this->given('Default context', array('env' => 'test', 'fixtures' => '{{name}}', 'lang' => 'en'))
+             ->when('Go to page', array('route' => '{{name}}'))
+             ->then('Page title should be', array('regex' => '/^{{Name}}s/'))
+             ->and('Page should contain link', array('label' => 'New {{Name}}'))
+             ->and('Page should contain link', array('route' => 'show_{{name}}'))
+             ->and('Page should contain link', array('label' => 'edit'))
+             ->and('Page should contain link', array('label' => 'delete'));
+    }
+
+    /**
+     * @scenario
+     */
+    public function show{{Name}}() {
+        $this->given('Default context', array('env' => 'test', 'fixtures' => '{{name}}', 'lang' => 'en'))
+             ->when('Go to page', array('route' => '{{name}}'))
+             ->and('Click link', array('label' => 'edit'))
+             ->then('Page title should be', array('regex' => '/^{{Name}}: /'))
+             ->and('Page should contain link', array('label' => 'back'))
+             ->and('Page should contain link', array('label' => 'edit'))
+             ->and('Page should contain link', array('label' => 'delete'));
+    }
+
+    /**
+     * @scenario
+     */
+    public function create{{Name}}() {
+        $this->given('Default context', array('env' => 'test', 'fixtures' => '{{name}}', 'lang' => 'en'))
+             ->when('Go to page', array('route' => '{{name}}'))
+             ->and('Click link', array('label' => 'New {{Name}}'))
+             ->and('Type', array('label' => 'Name', 'value' => 'Test {{Name}}'))
+             ->and('Submit', array('label' => 'Create'))
+             ->then('Page should be', array('route' => 'show_{{name}}'))
+             ->and('Page title should be', array('regex' => '/^{{Name}}: Test {{Name}}/'))
+             ->and('Page should contain', array('string' => 'successfully created'))
+             ->and('Page should contain', array('regex' => 'Test {{Name}}'));
+    }
+    
+    /**
+     * @scenario
+     */
+    public function edit{{Name}}() {
+        $this->given('Default context', array('env' => 'test', 'fixtures' => '{{name}}', 'lang' => 'en'))
+             ->when('Go to page', array('route' => '{{name}}'))
+             ->and('Click link', array('label' => 'edit'))
+             ->and('Type', array('label' => 'Name', 'value' => 'Test {{Name}}'))
+             ->and('Submit', array('label' => 'Save'))
+             ->then('Page should be', array('route' => 'show_{{name}}'))
+             ->and('Page title should be', array('regex' => '/^{{Name}}: Test {{Name}}/'))
+             ->and('Page should contain', array('string' => 'successfully updated'))
+             ->and('Page should contain', array('regex' => 'Test {{Name}}'));
+    }
+    
+    /**
+     * @scenario
+     */
+    public function delete{{Name}}() {
+        $this->given('Default context', array('env' => 'test', 'fixtures' => '{{name}}', 'lang' => 'en'))
+             ->when('Go to page', array('route' => '{{name}}'))
+             ->and('Click link', array('label' => 'delete'))
+             ->and('Respond to confirmation', true)
+             ->then('Page should be', array('route' => '{{name}}'))
+             ->and('Page should contain', array('string' => 'successfully deleted'));
+    }
+}
