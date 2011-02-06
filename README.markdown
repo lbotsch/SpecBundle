@@ -65,32 +65,30 @@ Predefined Actions
 GIVEN: The initialization
 -------------------------
 
- * Default context:
-    Initializes your application kernel and a web client instance
-    is saved to $world["client"].
-    Arguments:
-        - array The following options are passed to the kernel
-            'env'    => The environment to run in
-            'debug'  => Enable debugging
-            Anything else is passed to the client as SERVER options (see $_SERVER)
+ *    Default context:
+      Initializes your application kernel and a web client instance
+      is saved to $world["client"].
+      Arguments:
+      -    array The following options are passed to the kernel
+           'env'    => The environment to run in
+           'debug'  => Enable debugging
+           Anything else is passed to the client as SERVER options (see $_SERVER)
 
 WHEN: The interaction
 ---------------------
 
- * Go to page:
-    Uses the client if initialized in the GIVEN section to make
-    a request to a given url and saves a dom crawler for the requested
-    page in $world["crawler"].
-    Arguments:
-        - string URL to navigate to
-        - string HTTP method (defaults to 'GET')
- 
- * 
+ *    Go to page:
+      Uses the client if initialized in the GIVEN section to make
+      a request to a given url and saves a dom crawler for the requested
+      page in $world["crawler"].
+      Arguments:
+      -    string URL to navigate to
+      -    string HTTP method (defaults to 'GET')
+
 
 THEN: The checking
 ------------------
 
- * 
 
 
 Writing custom actions
