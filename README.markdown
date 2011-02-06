@@ -40,7 +40,7 @@ Manual installation
             );
             ...
         }
-*   
+
 Writing Specs
 =============
 
@@ -65,27 +65,65 @@ Predefined Actions
 GIVEN: The initialization
 -------------------------
 
- *    Default context:
+ *    __Default context__:
       Initializes your application kernel and a web client instance
       is saved to $world["client"].
       Arguments:
-      -    array The following options are passed to the kernel
-           'env'    => The environment to run in
-           'debug'  => Enable debugging
-           Anything else is passed to the client as SERVER options (see $_SERVER)
+      -    _array_ Options
+      
+           The following options are passed to the kernel
+           -    _'env'_    => The environment to run in
+           -    _'debug'_  => Enable debugging
+           Anything else is passed to the client as SERVER options (_see $\_SERVER_)
 
 WHEN: The interaction
 ---------------------
 
- *    Go to page:
+ *    __Go to page__:
       Uses the client if initialized in the GIVEN section to make
       a request to a given url and saves a dom crawler for the requested
       page in $world["crawler"].
       Arguments:
-      -    string URL to navigate to
-      -    string HTTP method (defaults to 'GET')
+      -    _string_ URL to navigate to
+      -    _string_ HTTP method (defaults to 'GET')
 
+ *    __Click link__:
+      Finds a link in the current page and clicks on it
+      Arguments:
+      -    _array_ Locator options for the link
+           -    _'label'_   => (_regex_) Tries to find a link by its content
+           -    _'id'_      => (_string_) Find a link by its id
+           -    _'css'_     => (_string_) Find a link using a css locator
+           -    _'xpath'_   => (_string_) Find a link using xpath
+      Example:
+          ->when('Click link', array(
+              'css' => 'a#my-link',
+          ))
 
+ *    __Fill form__:
+      Fills in a form and submits it
+      Arguments:
+      -    _array_ Locator options for the form
+           -    _'label'_   => (_regex_) Tries to find a form by its content
+           -    _'id'_      => (_string_) Find a form by its id
+           -    _'css'_     => (_string_) Find a form using a css locator
+           -    _'xpath'_   => (_string_) Find a form using xpath
+      -    _array_ Fields
+           -    _'name'_    => (_string_) Tries to find a form field by its name
+           -    _'label'_   => (_regex_) Tries to find a form field by its label
+           -    _'id'_      => (_string_) Find a form field by its id
+           -    _'css'_     => (_string_) Find a form field using a css locator
+           -    _'xpath'_   => (_string_) Find a form field using xpath
+           -    _'value'_   => (_string_ or _bool_) The fields value (use bool for checkbox)
+      -    _bool_ Submit the form (Defaults to true)
+      Example:
+          ->when('Fill form', array(
+              'css' => 'form#my-form',
+          ), array(
+              array('name' => 'name', 'value' => 'Lukas'),
+              array('name' => 'email', 'value' => 'lukas{DOT}botsch[AT]gmail{DOT}com'),
+          ), true)
+      
 THEN: The checking
 ------------------
 
