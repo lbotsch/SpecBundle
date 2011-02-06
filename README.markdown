@@ -86,16 +86,21 @@ WHEN: The interaction
       Arguments:
       -    _string_ URL to navigate to
       -    _string_ HTTP method (defaults to 'GET')
+      -    _array_ (_optional_) POST data in *name => value* format
+      Example:
+      
+          ->when('Go to page', '/home')
 
  *    __Click link__:
       Finds a link in the current page and clicks on it
       Arguments:
       -    _array_ Locator options for the link
-           -    _'label'_   => (_regex_) Tries to find a link by its content
-           -    _'id'_      => (_string_) Find a link by its id
-           -    _'css'_     => (_string_) Find a link using a css locator
-           -    _'xpath'_   => (_string_) Find a link using xpath
+           -    'label'    => (_regex_) Tries to find a link by its content
+           -    'id'       => (_string_) Find a link by its id
+           -    'css'      => (_string_) Find a link using a css locator
+           -    'xpath'    => (_string_) Find a link using xpath
       Example:
+      
           ->when('Click link', array(
               'css' => 'a#my-link',
           ))
@@ -104,19 +109,20 @@ WHEN: The interaction
       Fills in a form and submits it
       Arguments:
       -    _array_ Locator options for the form
-           -    _'label'_   => (_regex_) Tries to find a form by its content
-           -    _'id'_      => (_string_) Find a form by its id
-           -    _'css'_     => (_string_) Find a form using a css locator
-           -    _'xpath'_   => (_string_) Find a form using xpath
+           -    'label'    => (_regex_) Tries to find a form by its content
+           -    'id'       => (_string_) Find a form by its id
+           -    'css'      => (_string_) Find a form using a css locator
+           -    'xpath'    => (_string_) Find a form using xpath
       -    _array_ Fields
-           -    _'name'_    => (_string_) Tries to find a form field by its name
-           -    _'label'_   => (_regex_) Tries to find a form field by its label
-           -    _'id'_      => (_string_) Find a form field by its id
-           -    _'css'_     => (_string_) Find a form field using a css locator
-           -    _'xpath'_   => (_string_) Find a form field using xpath
-           -    _'value'_   => (_string_ or _bool_) The fields value (use bool for checkbox)
+           -    'name'     => (_string_) Tries to find a form field by its name
+           -    'label'    => (_regex_) Tries to find a form field by its label
+           -    'id'       => (_string_) Find a form field by its id
+           -    'css'      => (_string_) Find a form field using a css locator
+           -    'xpath'    => (_string_) Find a form field using xpath
+           -    'value'    => (_string_ or _bool_) The fields value (use bool for checkbox)
       -    _bool_ Submit the form (Defaults to true)
       Example:
+          
           ->when('Fill form', array(
               'css' => 'form#my-form',
           ), array(
