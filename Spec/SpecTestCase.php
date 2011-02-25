@@ -2,6 +2,8 @@
 
 namespace Bundle\SpecBundle\Spec;
 
+use Bundle\SpecBundle\Spec\ActionCollection;
+use Bundle\SpecBundle\Spec\DefaultActionCollection;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -10,23 +12,32 @@ use Symfony\Component\Finder\Finder;
 abstract class SpecTestCase extends \PHPUnit_Extensions_Story_TestCase
 {
     protected $kernel;
+    
+    private $actionCollections = array();
+
+    
+    public function __construct() {
+        $this->init();
+        $this->registerActionCollection(new DefaultActionCollection());
+    }
 
     /**
-     * User implemented Given actions
-	 * @see runGiven
+     * Overwrite init() to add your own ActionCollections
      */
-    abstract public function doGiven(&$world, $action, $arguments);
-    /**
-     * User implemented When actions
-	 * @see runWhen
-     */
-    abstract public function doWhen(&$world, $action, $arguments);
-    /**
-     * User implemented Then actions
-	 * @see runThen
-     */
-    abstract public function doThen(&$world, $action, $arguments);
-
+    public function init() {}
+    
+    public function registerActionCollection(ActionCollection $actionCollection) {
+        $this->actionCollections[] = $actionCollection;
+    }
+    
+    private function runAction(&$world, $type, $action, $arguments) {
+        foreach ($this->actionCollections as $actionCollection) {
+            if (false !== $result = $actionCollection->execute($world, $type, $action, $arguments))
+                return $result;
+        }
+        return $this->notImplemented($action);
+    }
+    
     /**
 	 * Implementation for "Given" steps.
      * @param array $world
@@ -34,29 +45,7 @@ abstract class SpecTestCase extends \PHPUnit_Extensions_Story_TestCase
 	 * @param array $arguments
      */
     public function runGiven(&$world, $action, $arguments) {
-        if (false === $this->doGiven($world, $action, $arguments)) {
-            switch ($action) {
-                case "Default context": {
-                    // Create kernel
-                    if (is_array($arguments[0])) $arguments = $arguments[0];
-                    $kernelOptions = array();
-                    $serverOptions = array();
-                    foreach ($arguments as $k => $v) {
-                        switch ($k) {
-                            case "env": $kernelOptions["environment"] = $v; break;
-                            case "debug": $kernelOptions["debug"] = $v; break;
-                            default: $serverOptions[$k] = $v;
-                        }
-                    }
-                    $world["client"] = $this->createClient();
-                } break;
-                
-                case "": {
-                    
-                } break;
-                default: return $this->notImplemented($action);
-            }
-        }
+        return $this->runAction($world, "given", $action, $arguments);
     }
     
     /**
@@ -66,22 +55,7 @@ abstract class SpecTestCase extends \PHPUnit_Extensions_Story_TestCase
 	 * @param array $arguments
      */
     public function runWhen(&$world, $action, $arguments) {
-        if (false === $this->doWhen($world, $action, $arguments)) {
-            switch ($action) {
-                case "Go to page": {
-                    // Navigate to a page
-                    if (is_string($arguments[0])) {
-                        $url = $arguments[0];
-                        $method = count($arguments) > 1 && is_string($arguments[1]) ? $arguments[1] : 'GET';
-                        $world["crawler"] = $world["client"]->request($method, $url);
-                    } else {
-                        throw new \InvalidArgumentException('The argument to the \'Go to page\' action must be a valid url');
-                    }
-                } break;
-                
-                default: return $this->notImplemented($action);
-            }
-        }
+        return $this->runAction($world, "when", $action, $arguments);
     }
     
     /**
@@ -91,18 +65,7 @@ abstract class SpecTestCase extends \PHPUnit_Extensions_Story_TestCase
 	 * @param array $arguments
      */
     public function runThen(&$world, $action, $arguments) {
-        if (false === $this->doThen($world, $action, $arguments)) {
-            switch ($action) {
-                case "": {
-                    
-                } break;
-                
-                case "": {
-                    
-                } break;
-                default: return $this->notImplemented($action);
-            }
-        }
+        return $this->runAction($world, "then", $action, $arguments);
     }
 
     /**

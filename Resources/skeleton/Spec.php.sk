@@ -2,15 +2,21 @@
 
 namespace {{Namespace}};
 
-use {{Namespace}}\Base\{{Name}}SpecBase;
+use Bundle\SpecBundle\Spec\SpecTestCase;
+use {{Namespace}}\Actions\{{Name}}ActionCollection;
+
 
 /**
  * {{Name}} Spec
  * Add your own scenarios or edit the predefined scenarios
  * that define a simple CRUD interface to the {{Name}} entity.
  */
-class {{Name}}Spec extends {{Name}}SpecBase
+class {{Name}}Spec extends SpecTestCase
 {
+    public function init() {
+        $this->registerActionCollection(new {{Name}}ActionCollection());
+    }
+
     /**
      * @scenario
      */

@@ -38,7 +38,8 @@ The <info>init:spec</info> command generates a new spec with a basic skeleton.
 <info>./app/console init:spec HelloBundle greeting</info>
 EOT
             )
-            ->setName('init:spec')
+            ->setName('spec:create')
+            ->setDescription('Creates a Spec')
         ;
     }
     
@@ -64,22 +65,26 @@ EOT
                 $path = $bundle->getPath().'/Tests/Spec/';
                 
                 if (file_exists($path.$specName."Spec.php")) {
-                	$output->writeln(sprintf("<info>Spec already exists!<info> (<comment>%s</comment>)", $path.$specName."Spec.php"));
-                } else {
-                    $filesystem->copy(__DIR__.'/../Resources/skeleton/Spec.php.sk', $path.$specName.'Spec.php');
-                    $filesystem->copy(__DIR__.'/../Resources/skeleton/SpecBase.php.sk', $path.'/Base/'.$specName.'SpecBase.php');
-                    
-                    $output->writeln(sprintf('<info>Generating Spec <comment>%s</comment> in bundle <comment>%s</comment></info>', $specName, $bundleName));
-                    $output->writeln(sprintf('   <info>+File</info> <comment>%sBase/%sSpecBase.php</comment>', $path, $specName));
-                    $output->writeln(sprintf('   <info>+File</info> <comment>%s%sSpec.php</comment>', $path, $specName));
-                    $args = array(
-                        'Namespace' => $bundle->getNamespace().'\Tests\Spec',
-                        'Name' => $specName,
-                        'name' => strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $specName)),
-                    );
-                    Mustache::renderFile($path.$specName.'Spec.php', $args);
-                    Mustache::renderFile($path.'/Base/'.$specName.'SpecBase.php', $args);
+                	$output->writeln(sprintf("<error>Spec already exists!</error> (%s)", $path.$specName."Spec.php"));
+                    return;
                 }
+                if (file_exists($path.'Actions/'.$specName.'ActionCollection.php')) {
+                    $output->writeln(sprintf("<error>ActionCollection already exists!</error> (%s)", $path.'Actions/'.$specName."ActionCollection.php"));
+                    return;
+                }
+                $filesystem->copy(__DIR__.'/../Resources/skeleton/Spec.php.sk', $path.$specName.'Spec.php');
+                $filesystem->copy(__DIR__.'/../Resources/skeleton/ActionCollection.php.sk', $path.'Actions/'.$specName.'ActionCollection.php');
+                
+                $output->writeln(sprintf('Generating Spec <info>%s</info> in bundle %s', $specName, $bundleName));
+                $output->writeln(sprintf('   <info>+File</info> %sActions/%sActionCollection.php', $path, $specName));
+                $output->writeln(sprintf('   <info>+File</info> %s%sSpec.php', $path, $specName));
+                $args = array(
+                    'Namespace' => $bundle->getNamespace().'\Tests\Spec',
+                    'Name' => $specName,
+                    'name' => strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $specName)),
+                );
+                Mustache::renderFile($path.$specName.'Spec.php', $args);
+                Mustache::renderFile($path.'Actions/'.$specName.'ActionCollection.php', $args);
             }
         }
         
